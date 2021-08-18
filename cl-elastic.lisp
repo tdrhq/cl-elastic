@@ -1,6 +1,6 @@
 #|
   This file is a part of cl-elastic.
-  (c) 2019 Finn Völkel 
+  (c) 2019 Finn Völkel
   Author: Finn Völkel  (firstname.lastname@gmail.com)
 |#
 
@@ -29,7 +29,7 @@
 (in-package :cl-elastic)
 
 (defvar *enable-keywords* nil
-  "If set to a true value, keywords will be transformed to strings in JSON 
+  "If set to a true value, keywords will be transformed to strings in JSON
 objects and read back as keywords.")
 
 (defclass <client> ()
@@ -89,7 +89,7 @@ transformed into the newline seperated concatenation of JSON objects."
                       :content-type "application/json"
                       :external-format-in :utf-8
                       :external-format-out :utf-8
-                      :parameters parameters 
+                      :parameters parameters
                       :want-stream T)
       (declare (ignore headers uri stream reason))
       (unwind-protect
@@ -145,7 +145,7 @@ transformed into the newline seperated concatenation of JSON objects."
     (set-macro-character #\} (get-macro-character #\)))
     (let ((contents (read-delimited-list #\} stream t)))
       (when (oddp (length contents)) (error 'odd-number-of-forms))
-      (let ((pairs (if contents 
+      (let ((pairs (if contents
                        (loop for pairs = contents then (cddr pairs)
                           collect (list (car pairs) (cadr pairs))
                           while (cddr pairs))
@@ -177,6 +177,7 @@ transformed into the newline seperated concatenation of JSON objects."
   (:macro-char #\# :dispatch)
   (:dispatch-macro-char #\# #\{ #'|#{-reader-}|))
 
+#-lispworks
 (handler-bind (#+sbcl(sb-kernel:redefinition-with-defmethod #'muffle-warning))
   (defmethod print-object ((object hash-table) stream)
     (if (= (hash-table-count object) 0)
